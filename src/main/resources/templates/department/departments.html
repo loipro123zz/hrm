@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản Lý Nhân Viên</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #ffecd2, #fcb69f);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        h3 {
+            margin-bottom: 20px;
+        }
+
+        .table-container {
+            margin-top: 20px;
+        }
+
+        .table {
+            border-collapse: collapse;
+            width: 100%;
+            background: linear-gradient(to bottom right, #ffecd2, #fcb69f);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .table th, .table td {
+            text-align: center;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table th {
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            color: white;
+        }
+
+        .table td {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .table tbody tr:hover td {
+            background: rgba(255, 255, 255, 1);
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #ff7e5f;
+            border-color: #ff7e5f;
+        }
+
+        .btn-primary:hover {
+            background-color: #e57373;
+            border-color: #e57373;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+
+        .modal-content {
+            border-radius: 15px;
+        }
+
+        .modal-header {
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            color: white;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        .modal-footer {
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        .form-control, .form-select {
+            border-radius: 10px;
+        }
+
+        .alert {
+            border-radius: 10px;
+        }
+
+        .btn-close {
+            border: none;
+        }
+    </style>
+    
+</head>
+<body>
+<div class="container">
+    <h3>Danh sách phòng ban</h3>
+    <hr>
+    <!-- Hiển thị thông báo -->
+    <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${message}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Thêm Phòng Ban
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Thêm phòng ban</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <form th:action="@{/departments/save}" method="post">
+                        <div class="mb-3">
+                            <label for="departmentName" class="form-label">Tên Phòng Ban</label>
+                            <input type="text" class="form-control" id="departmentName" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="departmentDescription" class="form-label">Mô tả</label>
+                            <textarea class="form-control" id="departmentDescription" name="description"
+                                      required></textarea>
+                        </div>
+                        <hr>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Lưu</button>
+                        </div>
+                    </form>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <!--  Danh sách phòng ban  -->
+    <table class="table table-bordered table-striped">
+        <thead class="table-info">
+        <tr>
+            <td>
+                NO
+            </td>
+            <td>
+                ID
+            </td>
+            <td>
+                Tên Phòng Ban
+            </td>
+            <td>
+                Số Lượng Nhân Viên
+            </td>
+            <td>
+                Mô tả
+            </td>
+            <td>
+                Xử Lý
+            </td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="department, index : ${departments}">
+            <td th:text="${index.index+1}"></td>
+            <td th:text="${department.id}"></td>
+            <td th:text="${department.name}"></td>
+            <td th:text="${departmentEmployeeCounts.get(department.id)}"></td>
+            <td th:text="${department.description}"></td>
+            <td>
+                <!-- Begin Nút cập nhật -->
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        th:data-bs-target="'#updateModal-' + ${department.id}">
+                    Cập nhật
+                </button>
+                <!-- Modal -->
+                <div class="modal fade" th:id="'updateModal-' + ${department.id}" tabindex="-1"
+                     aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Cập nhật thông tin phòng ban</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form th:action="@{/departments/update}" method="post">
+                                    <input type="hidden" th:name="id" th:value="${department.id}">
+                                    <div class="mb-3">
+                                        <label for="updateDepartmentName" class="form-label">Tên Phòng Ban</label>
+                                        <input type="text" class="form-control" id="updateDepartmentName" name="name"
+                                               th:value="${department.name}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="updateDepartmentDescription" class="form-label">Mô tả</label>
+                                        <textarea class="form-control" id="updateDepartmentDescription"
+                                                  name="description" required
+                                                  th:text="${department.description}"></textarea>
+                                    </div>
+                                    <hr>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">Lưu</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Nút cập nhật -->
+
+                <!-- Button trigger delete confirmation modal -->
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                        th:data-bs-target="'#deleteModal-' + ${department.id}">
+                    Xóa
+                </button>
+                <!-- Delete Confirmation Modal -->
+                <div class="modal fade" th:id="'deleteModal-' + ${department.id}" tabindex="-1"
+                     aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="deleteModalLabel">Xác nhận xóa</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Bạn có chắc chắn muốn xóa phòng ban này không?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                <form th:action="@{/departments/delete/{id}(id=${department.id})}" method="post"
+                                      style="display:inline;">
+                                    <button type="submit" class="btn btn-danger">Xóa</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Delete Button -->
+            </td>
+
+        </tr>
+        </tbody>
+
+    </table>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>
