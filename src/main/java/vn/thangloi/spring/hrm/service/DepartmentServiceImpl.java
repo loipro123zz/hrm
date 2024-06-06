@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.thangloi.spring.hrm.dao.DepartmentRepository;
 import vn.thangloi.spring.hrm.entity.Department;
+import vn.thangloi.spring.hrm.entity.Employee;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
@@ -42,7 +44,25 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     @Transactional
-    public void deleteDepartmentById(int id) {
-        departmentRepository.deleteById(id);
+    public void deleteDepartmentById(int departmentId) {
+        Department department = departmentRepository.findById(departmentId).orElse(null);
+        if (department != null) {
+            // Kiểm tra xem có nhân viên thuộc phòng ban này không
+            Set<Employee> employees = department.getEmployees();
+            if (!employees.isEmpty()) {
+                // Nếu có nhân viên, thông báo cho người dùng và dừng việc xóa
+                throw new RuntimeException("Không thể xóa phòng ban này vì có nhân viên thuộc phòng ban này.");
+            } else {
+                // Nếu không có nhân viên, xóa phòng ban
+                departmentRepository.deleteById(departmentId);
+            }
+        } else {
+            throw new RuntimeException("Không tìm thấy phòng ban với ID: " + departmentId);
+        }
+    }
+
+    @Override
+    public Department getDepartmentByManagerId(int managerId) {
+        return departmentRepository.findByManagerId(managerId);
     }
 }

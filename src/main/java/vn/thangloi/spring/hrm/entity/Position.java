@@ -16,7 +16,7 @@ public class Position {
     @Column(name = "name", length = 100)
     private String name;
 
-    @OneToMany(mappedBy = "position", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "position")
     private Set<Employee> employees;
 
     public Position() {

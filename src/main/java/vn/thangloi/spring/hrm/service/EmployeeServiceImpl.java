@@ -57,5 +57,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.countByPositionId(positionId);
     }
 
+    @Override
+    public List<Employee> getEmployeeByDepartmentId(int departmentId) {
+        return employeeRepository.findByDepartmentId(departmentId);
+    }
+
 
 }

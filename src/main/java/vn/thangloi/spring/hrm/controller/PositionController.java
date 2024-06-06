@@ -59,9 +59,14 @@ public class PositionController {
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") int id, RedirectAttributes redirectAttributes) {
-        positionService.deletePositionById(id);
-        redirectAttributes.addFlashAttribute("message", "Xóa thành công vị trí");
-        return "redirect:/positions/list";
+        try {
+            positionService.deletePositionById(id);
+            redirectAttributes.addFlashAttribute("message", "Xóa thành công vị trí");
+            return "redirect:/positions/list";
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/positions/list";
+        }
     }
 
 }

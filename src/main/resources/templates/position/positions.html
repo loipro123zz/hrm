@@ -107,11 +107,16 @@
 </head>
 <body>
 <div class="container">
-    <h3>Danh sách phòng ban</h3>
+    <h3>Danh sách Vị Trí</h3>
     <hr>
     <!-- Hiển thị thông báo -->
     <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
         <span th:text="${message}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${errorMessage}"></span>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 
@@ -150,9 +155,6 @@
         <thead class="table-info">
         <tr>
             <td>
-                No.
-            </td>
-            <td>
                 Id
             </td>
             <td>
@@ -168,7 +170,6 @@
         </thead>
         <tbody>
         <tr th:each="position, index : ${positions}">
-            <td th:text="${index.index+1}"></td>
             <td th:text="${position.id}"></td>
             <td th:text="${position.name}"></td>
             <td th:text="${positionEmployeeCounts.get(position.id)}"></td>

@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.thangloi.spring.hrm.entity.Department;
+import vn.thangloi.spring.hrm.entity.Employee;
 import vn.thangloi.spring.hrm.service.DepartmentService;
 import vn.thangloi.spring.hrm.service.EmployeeService;
 
@@ -49,16 +50,32 @@ public class DepartmentController {
     }
 
     @PostMapping("/update")
-    public String updateDepartment(@ModelAttribute("department") Department department, RedirectAttributes redirectAttributes) {
+    public String updateDepartment(@ModelAttribute("department") Department department, @RequestParam("managerId") int managerId, RedirectAttributes redirectAttributes) {
+        // Cập nhật trưởng phòng cho department
+        Employee manager = employeeService.getEmployeeById(managerId);
+        department.setManager(manager);
         departmentService.updateDepartment(department);
+
+        // Cập nhật thông tin trưởng phòng cho các phòng ban
+        List<Employee> employees = employeeService.getEmployeeByDepartmentId(department.getId());
+        for (Employee employee : employees) {
+            employee.setManager(manager);
+            employeeService.updateEmployee(employee);
+        }
+
         redirectAttributes.addFlashAttribute("message", "Cập nhật phòng ban thành công!");
         return "redirect:/departments/list";
     }
 
     @PostMapping("delete/{id}")
     public String deleteDepartment(@PathVariable("id") int id, RedirectAttributes redirectAttributes) {
-        departmentService.deleteDepartmentById(id);
-        redirectAttributes.addFlashAttribute("message", "Xóa phòng ban thành công!");
-        return "redirect:/departments/list";
+        try {
+            departmentService.deleteDepartmentById(id);
+            redirectAttributes.addFlashAttribute("message", "Xóa phòng ban thành công!");
+            return "redirect:/departments/list";
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/departments/list";
+        }
     }
 }

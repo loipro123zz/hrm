@@ -82,6 +82,15 @@ public class EmployeeController {
     @PostMapping("delete/{id}")
     public String deleteEmployee(@PathVariable("id") int id,
                                  RedirectAttributes redirectAttributes) {
+
+
+        // mình phải kt xem là thằng nhân viên có phải là trưởng phòng không
+        Department department = departmentService.getDepartmentByManagerId(id);
+        if (department != null) {
+            department.setManager(null);
+            departmentService.updateDepartment(department);
+        }
+        // Rôì mới xóa
         employeeService.deleteEmployeeById(id);
         redirectAttributes.addFlashAttribute("message", "Xóa nhân viên thành công");
         return "redirect:/employees/list";

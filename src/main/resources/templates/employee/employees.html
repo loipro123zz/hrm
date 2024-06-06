@@ -185,7 +185,7 @@
         <thead class="table-info">
         <tr>
             <td>
-                No.
+                STT
             </td>
             <td>
                 Id
@@ -198,6 +198,9 @@
             </td>
             <td>
                 Phòng ban
+            </td>
+            <td>
+                Trưởng Phòng
             </td>
             <td>
                 Vị Trí
@@ -219,8 +222,19 @@
             <td th:text="${employee.id}"></td>
             <td th:text="${employee.lastName}"></td>
             <td th:text="${employee.firstName}"></td>
-            <td th:text="${employee.department != null ? employee.department.name : 'N/A'}"></td>
-            <td th:text="${employee.position != null ? employee.position.name : 'N/A'}"></td>
+            <td th:text="${employee.department != null ? employee.department.name : 'Chưa có'}"></td>
+            <td>
+                <span th:if="${employee.department.manager != null}">
+                    <span th:unless="${employee.id == employee.department.manager.id}"
+                          th:text="${employee.department.manager.lastName + ' ' + employee.department.manager.firstName}">
+                    </span>
+                </span>
+                <span th:unless="${employee.department.manager != null}">
+                    Chưa có
+                </span>
+            </td>
+
+            <td th:text="${employee.position != null ? employee.position.name : 'Chưa có'}"></td>
             <td th:text="${employee.email}"></td>
             <td th:text="${employee.phoneNumber}"></td>
             <td>

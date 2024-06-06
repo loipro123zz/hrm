@@ -19,4 +19,6 @@ public interface EmployeeService {
 
     public int getEmployeeCountByPositionId(int positionId);
 
+    public List<Employee> getEmployeeByDepartmentId(int departmentId);
+
 }

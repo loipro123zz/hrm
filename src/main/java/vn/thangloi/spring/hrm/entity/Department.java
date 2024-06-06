@@ -16,23 +16,29 @@ public class Department {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL )
+    @OneToMany(mappedBy = "department")
     private Set<Employee> employees;
+
+    @OneToOne
+    @JoinColumn(name = "manager_id", unique = true)
+    private Employee manager;
 
     public Department() {
     }
 
-    public Department(String name, String description, Set<Employee> employees) {
+    public Department(String name, String description, Set<Employee> employees, Employee manager) {
         this.name = name;
         this.description = description;
         this.employees = employees;
+        this.manager = manager;
     }
 
-    public Department(int id, String name, String description, Set<Employee> employees) {
+    public Department(int id, String name, String description, Set<Employee> employees, Employee manager) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.employees = employees;
+        this.manager = manager;
     }
 
     public int getId() {
@@ -66,4 +72,14 @@ public class Department {
     public void setEmployees(Set<Employee> employees) {
         this.employees = employees;
     }
+
+    public Employee getManager() {
+        return manager;
+    }
+
+    public void setManager(Employee manager) {
+        this.manager = manager;
+    }
+
+
 }

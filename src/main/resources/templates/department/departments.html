@@ -103,15 +103,20 @@
             border: none;
         }
     </style>
-    
+
 </head>
 <body>
 <div class="container">
-    <h3>Danh sách phòng ban</h3>
+    <h3>Danh sách Phòng Ban</h3>
     <hr>
     <!-- Hiển thị thông báo -->
     <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
         <span th:text="${message}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${errorMessage}"></span>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 
@@ -158,13 +163,13 @@
         <thead class="table-info">
         <tr>
             <td>
-                NO
+                Id
             </td>
             <td>
-                ID
+                Phòng Ban
             </td>
             <td>
-                Tên Phòng Ban
+                Trưởng Phòng
             </td>
             <td>
                 Số Lượng Nhân Viên
@@ -179,9 +184,11 @@
         </thead>
         <tbody>
         <tr th:each="department, index : ${departments}">
-            <td th:text="${index.index+1}"></td>
             <td th:text="${department.id}"></td>
             <td th:text="${department.name}"></td>
+            <td th:if="${department.manager != null}"
+                th:text="${department.manager.lastName + ' ' + department.manager.firstName}"></td>
+            <td th:if="${department.manager == null}">Chưa có</td>
             <td th:text="${departmentEmployeeCounts.get(department.id)}"></td>
             <td th:text="${department.description}"></td>
             <td>
@@ -216,7 +223,19 @@
                                                   name="description" required
                                                   th:text="${department.description}"></textarea>
                                     </div>
-                                    <hr>
+                                    <div class="mb-3">
+                                        <label for="updateDepartmentManager" class="form-label">Trưởng Phòng</label>
+                                        <select class="form-select" id="updateDepartmentManager" name="managerId">
+                                            <option value="" th:if="${department.manager == null}">
+                                                Chọn Trưởng Phòng
+                                            </option>
+                                            <option th:each="employee : ${department.employees}"
+                                                    th:value="${employee.id}"
+                                                    th:text="${employee.firstName + ' ' + employee.lastName}"
+                                                    th:selected="${department.manager != null} ? ${employee.id} == ${department.manager.id} : false">
+                                            </option>
+                                        </select>
+                                    </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng
                                         </button>
