@@ -29,24 +29,29 @@ public class LeaveRequest {
     @Column(name = "reason")
     private String reason;
 
+    @Column(name = "status")
+    private String status;
+
     public LeaveRequest() {
     }
 
-    public LeaveRequest(Employee employee, Date startDate, Date endDate, String leaveType, String reason) {
+    public LeaveRequest(Employee employee, Date startDate, Date endDate, String leaveType, String reason, String status) {
         this.employee = employee;
         this.startDate = startDate;
         this.endDate = endDate;
         this.leaveType = leaveType;
         this.reason = reason;
+        this.status = status;
     }
 
-    public LeaveRequest(int id, Employee employee, Date startDate, Date endDate, String leaveType, String reason) {
+    public LeaveRequest(int id, Employee employee, Date startDate, Date endDate, String leaveType, String reason, String status) {
         this.id = id;
         this.employee = employee;
         this.startDate = startDate;
         this.endDate = endDate;
         this.leaveType = leaveType;
         this.reason = reason;
+        this.status = status;
     }
 
     public int getId() {
@@ -95,5 +100,13 @@ public class LeaveRequest {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

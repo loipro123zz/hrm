@@ -37,8 +37,15 @@ public class DepartmentController {
             int employeeCount = employeeService.getEmployeeCountByDepartmentId(department.getId());
             departmentEmployeesCounts.put(department.getId(), employeeCount);
         }
-
         model.addAttribute("departmentEmployeeCounts", departmentEmployeesCounts);
+
+        Map<Integer, List<Employee>> departmentEmployees = new HashMap<>();
+        for (Department department : departments) {
+            List<Employee> employees = employeeService.getEmployeeByDepartmentId(department.getId());
+            departmentEmployees.put(department.getId(), employees);
+        }
+        model.addAttribute("departmentEmployees", departmentEmployees);
+
         return "department/departments";
     }
 

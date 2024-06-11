@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/sidebar}">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <style>
+        body {
+          min-height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .container {
+          width: 100%;
+        }
+
+        /* Center the content in the column */
+        .text-center {
+          text-align: center;
+        }
+
+        /* Adjust the width of the form */
+        .w-25 {
+          width: 25%;
+        }
+
+        /* Optional: Add some padding around the form */
+        .w-25 p {
+          margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+<article layout:fragment="content">
+    <div>
+        <div class="d-flex justify-content-center align-items-center">
+            <img class="pt-2" src="https://cdn-icons-png.flaticon.com/512/10008/10008118.png" width="150" height="auto">
+        </div>
+        <h2 style="text-align: center;">Đăng Kí</h2>
+        <hr/>
+        <br>
+        <br>
+        <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${message}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <form action="#" th:action="@{/register}" method="POST">
+            <div th:if="${param.error}">
+                <div class="alert alert-danger" role="alert">
+                    <span>Đăng Kí Không Thành Công!!! Vui Lòng Kiểm Tra Lại Mật Khẩu Hoặc Tài Khoản!</span>
+                </div>
+            </div>
+
+            <!-- Employee input -->
+            <div class="form-outline mb-4">
+                <label for="employeeSelect" class="form-label">Chọn Nhân Viên</label>
+                <select class="form-select" id="employeeSelect" name="employeeId" required>
+                    <option value="">Chọn vị trí</option>
+                    <option th:each="employee : ${employees}" th:value="${employee.id}"
+                            th:text="${ employee.id + '-' + employee.lastName + ' ' + employee.firstName}"></option>
+                </select>
+            </div>
+
+            <!-- Role input -->
+            <div class="form-outline mb-4">
+                <label for="roleSelect" class="form-label">Chọn Role</label>
+                <select class="form-select" id="roleSelect" name="role" required>
+                    <option>Chọn role</option>
+                    <option value="ROLE_ADMIN">Admin</option>
+                    <option value="ROLE_EMPLOYEE">Employee</option>
+                </select>
+            </div>
+
+            <!-- Active input -->
+            <div class="form-outline mb-4">
+                <input type="checkbox" id="activeSelect" name="active">
+                <label for="activeSelect" class="form-label">Kích Hoạt</label>
+            </div>
+
+            <!-- Username input -->
+            <div class="form-outline mb-4">
+                <label class="form-label" for="form2Example1">Username</label>
+                <input type="text" th:field="*{account.username}" id="form2Example1" class="form-control"/>
+            </div>
+
+            <!-- Password input -->
+            <div class="form-outline mb-4">
+                <label class="form-label" for="form2Example2">Password</label>
+                <input type="password" th:field="*{account.password}" id="form2Example2" class="form-control"/>
+            </div>
+
+            <!-- Password2 input -->
+            <div class="form-outline mb-4">
+                <label class="form-label" for="form2Example3">Password Again</label>
+                <input type="password" name="password2" id="form2Example3" class="form-control"/>
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-primary btn-block mb-4 w-100">Đăng Kí</button>
+        </form>
+    </div>
+
+</article>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+</body>
+</html>

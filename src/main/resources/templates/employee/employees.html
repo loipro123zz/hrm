@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/sidebar}">
 <head>
     <meta charset="UTF-8">
     <title>Quản Lý Nhân Viên</title>
@@ -102,14 +104,22 @@
         .btn-close {
             border: none;
         }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+
     </style>
 
 </head>
 <body>
-<div class="container">
+<article layout:fragment="content">
+
     <h3>Danh sách nhân viên</h3>
     <hr>
-
+    
     <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
         <span th:text="${message}"></span>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -153,7 +163,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="employeeFirstName" class="form-label">Nhập tên</label>
-                            <input type="text" class="form-control" id="employeeFirstName" name="firstName" required>
+                            <input type="text" class="form-control" id="employeeFirstName" name="firstName"
+                                   required>
                         </div>
                         <div class="mb-3">
                             <label for="employeeEmail" class="form-label">Nhập email</label>
@@ -180,6 +191,8 @@
             </div>
         </div>
     </div>
+
+    <a href="/export/employees" class="btn btn-success">Xuất Excel</a>
 
     <table class="table table-bordered table-striped">
         <thead class="table-info">
@@ -238,123 +251,302 @@
             <td th:text="${employee.email}"></td>
             <td th:text="${employee.phoneNumber}"></td>
             <td>
-                <!-- Begin Nút cập nhật -->
-                <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                        th:data-bs-target="'#updateModal-' + ${employee.id}">
-                    Cập nhật
-                </button>
-                <!-- Modal -->
-                <div class="modal fade" th:id="'updateModal-' + ${employee.id}" tabindex="-1"
-                     aria-labelledby="exampleModalLabel2"
-                     aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel2">Cập nhật thông tin nhân viên</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form th:action="@{/employees/update}" method="post">
-                                    <input type="hidden" th:name="id" th:value="${employee.id}">
-                                    <div class="mb-3">
-                                        <label for="updateEmployeeDepartment" class="form-label">Phòng ban</label>
-                                        <select class="form-select" id="updateEmployeeDepartment" name="departmentId"
-                                                required>
-                                            <option value="">Chọn phòng ban</option>
-                                            <th:block th:each="department : ${departments}">
-                                                <option th:value="${department.id}"
-                                                        th:text="${department.name}"
-                                                        th:selected="${employee.department != null and employee.department.id == department.id}"></option>
-                                            </th:block>
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="updateEmployeePosition" class="form-label">Vị Trí</label>
-                                        <select class="form-select" id="updateEmployeePosition" name="positionId"
-                                                required>
-                                            <option value="">Chọn vị trí</option>
-                                            <th:block th:each="position : ${positions}">
-                                                <option th:value="${position.id}"
-                                                        th:text="${position.name}"
-                                                        th:selected="${employee.position != null and employee.position.id == position.id}"></option>
-                                            </th:block>
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="updateEmployeeLastName" class="form-label">Họ Nhân Viên</label>
-                                        <input type="text" class="form-control" id="updateEmployeeLastName"
-                                               name="lastName"
-                                               th:value="${employee.lastName}" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="updateEmployeeFirstName" class="form-label">Tên Nhân Viên</label>
-                                        <input type="text" class="form-control" id="updateEmployeeFirstName"
-                                               name="firstName"
-                                               th:value="${employee.firstName}" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="updateEmployeeEmail" class="form-label">Tên Nhân Viên</label>
-                                        <input type="text" class="form-control" id="updateEmployeeEmail"
-                                               name="email"
-                                               th:value="${employee.email}" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="updateEmployeePhoneNumber" class="form-label">Tên Nhân Viên</label>
-                                        <input type="text" class="form-control" id="updateEmployeePhoneNumber"
-                                               name="phoneNumber"
-                                               th:value="${employee.phoneNumber}" required>
+                <div class="button-container">
+                    <!-- Begin Xem -->
+                    <button type="button" data-bs-toggle="modal" class="btn p-0"
+                            th:data-bs-target="'#viewModal-' + ${employee.id}">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade" th:id="'viewModal-' + ${employee.id}" tabindex="-1"
+                         aria-labelledby="exampleModalLabel2a"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel2a"> Thông tin nhân viên</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="container bootstrap snippets bootdey">
+                                        <div class="panel-body inf-content">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <img alt="" style="width:600px;" title=""
+                                                         class="img-circle img-thumbnail isTooltip"
+                                                         src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                                                         data-original-title="Usuario">
+                                                    <ul title="Ratings" class="list-inline ratings text-center">
+                                                        <li><a href="#"><span
+                                                                class="glyphicon glyphicon-star"></span></a></li>
+                                                        <li><a href="#"><span
+                                                                class="glyphicon glyphicon-star"></span></a></li>
+                                                        <li><a href="#"><span
+                                                                class="glyphicon glyphicon-star"></span></a></li>
+                                                        <li><a href="#"><span
+                                                                class="glyphicon glyphicon-star"></span></a></li>
+                                                        <li><a href="#"><span
+                                                                class="glyphicon glyphicon-star"></span></a></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <strong>Information</strong><br>
+                                                    <div class="table-responsive">
+                                                        <table class="table table-user-information">
+                                                            <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    <strong>
+                                                                        <span class="glyphicon glyphicon-user  text-primary"></span>
+                                                                        Tên
+                                                                    </strong>
+                                                                </td>
+                                                                <td class="text-primary"
+                                                                    th:text="${employee.firstName}">
+
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <strong>
+                                                                        <span class="glyphicon glyphicon-cloud text-primary"></span>
+                                                                        Họ
+                                                                    </strong>
+                                                                </td>
+                                                                <td class="text-primary" th:text="${employee.lastName}">
+
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td>
+                                                                    <strong>
+                                                                        <span class="glyphicon glyphicon-bookmark text-primary"></span>
+                                                                        Username
+                                                                    </strong>
+                                                                </td>
+                                                                <td class="text-primary"
+                                                                    sec:authentication="principal.username">
+
+                                                                </td>
+                                                            </tr>
+
+
+                                                            <tr>
+                                                                <td>
+                                                                    <strong>
+                                                                        <span class="glyphicon glyphicon-eye-open text-primary"></span>
+                                                                        Role
+                                                                    </strong>
+                                                                </td>
+                                                                <td class="text-primary"
+                                                                    sec:authentication="principal.authorities">
+
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <strong>
+                                                                        <span class="glyphicon glyphicon-calendar text-primary"></span>
+                                                                        Vị Trí
+                                                                    </strong>
+                                                                </td>
+                                                                <td class="text-primary"
+                                                                    th:text="${employee.position.name}">
+
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <strong>
+                                                                        <span class="glyphicon glyphicon-calendar text-primary"></span>
+                                                                        Phòng Ban
+                                                                    </strong>
+                                                                </td>
+                                                                <td class="text-primary"
+                                                                    th:text="${employee.department.name}">
+
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <strong>
+                                                                        <span class="glyphicon glyphicon-envelope text-primary"></span>
+                                                                        Email
+                                                                    </strong>
+                                                                </td>
+                                                                <td class="text-primary" th:text="${employee.email}">
+
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td>
+                                                                    <strong>
+                                                                        <span class="glyphicon glyphicon-calendar text-primary"></span>
+                                                                        Số điện thoại
+                                                                    </strong>
+                                                                </td>
+                                                                <td class="text-primary"
+                                                                    th:text="${employee.phoneNumber}">
+
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td>
+                                                                    <strong>
+                                                                        <span class="glyphicon glyphicon-calendar text-primary"></span>
+                                                                        Địa chỉ
+                                                                    </strong>
+                                                                </td>
+                                                                <td class="text-primary" th:text="${employee.address}">
+
+                                                                </td>
+                                                            </tr>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng
-                                        </button>
-                                        <button type="submit" class="btn btn-primary">Lưu</button>
-                                    </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <!-- End Nút cập nhật -->
+                    <!-- End Xem -->
 
-                <!-- Button trigger delete confirmation modal -->
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                        th:data-bs-target="'#deleteModal-' + ${employee.id}">
-                    Xóa
-                </button>
-                <!-- Delete Confirmation Modal -->
-                <div class="modal fade" th:id="'deleteModal-' + ${employee.id}" tabindex="-1"
-                     aria-labelledby="deleteModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="deleteModalLabel">Xác nhận xóa</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                Bạn có chắc chắn muốn xóa phòng ban này không?
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                <form th:action="@{/employees/delete/{id}(id=${employee.id})}" method="post"
-                                      style="display:inline;">
-                                    <button type="submit" class="btn btn-danger">Xóa</button>
-                                </form>
+                    <!-- Begin Nút cập nhật -->
+                    <!-- Button trigger modal -->
+                    <button type="button" data-bs-toggle="modal" class="btn p-0"
+                            th:data-bs-target="'#updateModal-' + ${employee.id}">
+                        <i class="bi bi-pencil-square text-primary"></i>
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade" th:id="'updateModal-' + ${employee.id}" tabindex="-1"
+                         aria-labelledby="exampleModalLabel2"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel2">Cập nhật thông tin nhân
+                                        viên</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form th:action="@{/employees/update}" method="post">
+                                        <input type="hidden" th:name="id" th:value="${employee.id}">
+                                        <div class="mb-3">
+                                            <label for="updateEmployeeDepartment" class="form-label">Phòng ban</label>
+                                            <select class="form-select" id="updateEmployeeDepartment"
+                                                    name="departmentId"
+                                                    required>
+                                                <option value="">Chọn phòng ban</option>
+                                                <th:block th:each="department : ${departments}">
+                                                    <option th:value="${department.id}"
+                                                            th:text="${department.name}"
+                                                            th:selected="${employee.department != null and employee.department.id == department.id}"></option>
+                                                </th:block>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="updateEmployeePosition" class="form-label">Vị Trí</label>
+                                            <select class="form-select" id="updateEmployeePosition" name="positionId"
+                                                    required>
+                                                <option value="">Chọn vị trí</option>
+                                                <th:block th:each="position : ${positions}">
+                                                    <option th:value="${position.id}"
+                                                            th:text="${position.name}"
+                                                            th:selected="${employee.position != null and employee.position.id == position.id}"></option>
+                                                </th:block>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="updateEmployeeLastName" class="form-label">Họ</label>
+                                            <input type="text" class="form-control" id="updateEmployeeLastName"
+                                                   name="lastName"
+                                                   th:value="${employee.lastName}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="updateEmployeeFirstName" class="form-label">Tên</label>
+                                            <input type="text" class="form-control" id="updateEmployeeFirstName"
+                                                   name="firstName"
+                                                   th:value="${employee.firstName}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="updateEmployeeEmail" class="form-label">Email</label>
+                                            <input type="text" class="form-control" id="updateEmployeeEmail"
+                                                   name="email"
+                                                   th:value="${employee.email}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="updateEmployeePhoneNumber" class="form-label"> Số điện
+                                                thoại </label>
+                                            <input type="text" class="form-control" id="updateEmployeePhoneNumber"
+                                                   name="phoneNumber"
+                                                   th:value="${employee.phoneNumber}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="updateEmployeeAddress" class="form-label">Địa chỉ</label>
+                                            <input type="text" class="form-control" id="updateEmployeeAddress"
+                                                   name="address"
+                                                   th:value="${employee.address}" required>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng
+                                            </button>
+                                            <button type="submit" class="btn btn-primary">Lưu</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <!-- End Nút cập nhật -->
+
+                    <!-- Button trigger delete confirmation modal -->
+                    <button type="button" class="btn btn-danger p-1" data-bs-toggle="modal"
+                            th:data-bs-target="'#deleteModal-' + ${employee.id}">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                    <!-- Delete Confirmation Modal -->
+                    <div class="modal fade" th:id="'deleteModal-' + ${employee.id}" tabindex="-1"
+                         aria-labelledby="deleteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="deleteModalLabel">Xác nhận xóa</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Bạn có chắc chắn muốn xóa phòng ban này không?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                    <form th:action="@{/employees/delete/{id}(id=${employee.id})}" method="post"
+                                          style="display:inline;">
+                                        <button type="submit" class="btn btn-danger">Xóa</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Delete Button -->
                 </div>
-                <!-- End Delete Button -->
             </td>
         </tr>
         </tbody>
 
     </table>
-</div>
 
+</article>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

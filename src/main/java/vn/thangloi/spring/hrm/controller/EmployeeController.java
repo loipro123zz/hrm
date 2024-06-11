@@ -96,4 +96,10 @@ public class EmployeeController {
         return "redirect:/employees/list";
     }
 
+    @GetMapping("/search/position")
+    public String searchEmployeesByPosition(@RequestParam("keyword") String keyword, Model model) {
+        List<Employee> foundEmployees = employeeService.searchEmployeesByPosition(keyword);
+        model.addAttribute("employees", foundEmployees);
+        return "employee/employees";
+    }
 }

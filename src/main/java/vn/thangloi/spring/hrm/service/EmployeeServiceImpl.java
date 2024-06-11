@@ -62,5 +62,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.findByDepartmentId(departmentId);
     }
 
+    @Override
+    public List<Employee> getEmployeeByPositionId(int positionId) {
+        return employeeRepository.findByPositionId(positionId);
+    }
+
+    @Override
+    public List<Employee> searchEmployeesByPosition(String keyword) {
+        return employeeRepository.findByPositionNameContainingIgnoreCase(keyword);
+    }
+
 
 }

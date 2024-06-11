@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/sidebar}">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản Lý Nhân Viên</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #ffecd2, #fcb69f);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        h3 {
+            margin-bottom: 20px;
+        }
+
+        .table-container {
+            margin-top: 20px;
+        }
+
+        .table {
+            border-collapse: collapse;
+            width: 100%;
+            background: linear-gradient(to bottom right, #ffecd2, #fcb69f);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .table th, .table td {
+            text-align: center;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table th {
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            color: white;
+        }
+
+        .table td {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .table tbody tr:hover td {
+            background: rgba(255, 255, 255, 1);
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #ff7e5f;
+            border-color: #ff7e5f;
+        }
+
+        .btn-primary:hover {
+            background-color: #e57373;
+            border-color: #e57373;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+
+        .modal-content {
+            border-radius: 15px;
+        }
+
+        .modal-header {
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            color: white;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        .modal-footer {
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        .form-control, .form-select {
+            border-radius: 10px;
+        }
+
+        .alert {
+            border-radius: 10px;
+        }
+
+        .btn-close {
+            border: none;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+
+    </style>
+
+</head>
+<body>
+<article layout:fragment="content">
+
+    <h3>Danh sách nhân viên</h3>
+    <hr>
+
+    <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${message}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Thêm Lương Nhân Viên
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Thêm nhân viên</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <form th:action="@{/salaries/save-salary}" th:object="${salary}" method="post">
+                        <label for="employee">Employee:</label>
+                        <select id="employee" th:field="*{employee.id}">
+                            <option th:each="employee : ${employees}" th:value="${employee.id}"
+                                    th:text="${employee.firstName} + ' ' + ${employee.lastName}"></option>
+                        </select><br/>
+                        <label for="salary">Salary:</label>
+                        <input type="text" id="salary" th:field="*{salary}"/><br/>
+
+                        <label for="effectiveDate">Effective Date:</label>
+                        <input type="date" id="effectiveDate" th:field="*{effectiveDate}"/><br/>
+
+                        <button type="submit">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-info">
+        <tr>
+            <td>
+                STT
+            </td>
+            <td>
+                Id
+            </td>
+            <td>
+                Họ và tên
+            </td>
+            <td>
+                Lương
+            </td>
+            <td>
+                Xử lý
+            </td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="employeeSalary, index : ${employeeSalaries}">
+            <td th:text="${index.index+1}"></td>
+            <td th:text="${employeeSalary.id}"></td>
+            <td th:text="${employeeSalary.employee.lastName + ' ' + employeeSalary.employee.firstName}"></td>
+            <td th:text="${employeeSalary.salary}"></td>
+            <td></td>
+        </tr>
+        </tbody>
+
+    </table>
+
+</article>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>

@@ -10,9 +10,8 @@ public class HomeController {
 
     @GetMapping()
     public String showPageHome() {
-        return "home";
+        return "/fragments/sidebar";
     }
-
 
 
 }

@@ -40,6 +40,13 @@ public class PositionController {
         }
         model.addAttribute("positionEmployeeCounts", positionEmployeesCounts);
 
+        Map<Integer, List<Employee>> positionEmployees = new HashMap<>();
+        for (Position position : positions) {
+            List<Employee> employees = employeeService.getEmployeeByPositionId(position.getId());
+            positionEmployees.put(position.getId(), employees);
+        }
+        model.addAttribute("positionEmployees", positionEmployees);
+
         return "position/positions";
     }
 

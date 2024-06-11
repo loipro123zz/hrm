@@ -11,4 +11,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
     int countByPositionId(int positionId);
 
     List<Employee> findByDepartmentId(int departmentId);
+
+    List<Employee> findByPositionId(int positionId);
+
+    List<Employee> findByPositionNameContainingIgnoreCase(String positionName);
 }

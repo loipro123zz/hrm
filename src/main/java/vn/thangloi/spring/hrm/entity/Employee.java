@@ -2,6 +2,8 @@ package vn.thangloi.spring.hrm.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "employees")
 public class Employee {
@@ -10,6 +12,9 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", length = 11)
     private int id;
+
+    @Column(name = "image_url", length = 500)
+    private String imageUrl;
 
     @Column(name = "email", length = 45)
     private String email;
@@ -38,10 +43,17 @@ public class Employee {
     @JoinColumn(name = "manager_id")
     private Employee manager;
 
+    @OneToOne(mappedBy = "employee")
+    private Account account;
+
+    @OneToMany(mappedBy = "employee")
+    private List<Salary> salaries;
+
     public Employee() {
     }
 
-    public Employee(String email, String lastName, String firstName, String phoneNumber, String address, Department department, Position position, Employee manager) {
+    public Employee(String imageUrl, String email, String lastName, String firstName, String phoneNumber, String address, Department department, Position position, Employee manager, Account account, List<Salary> salaries) {
+        this.imageUrl = imageUrl;
         this.email = email;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -50,10 +62,13 @@ public class Employee {
         this.department = department;
         this.position = position;
         this.manager = manager;
+        this.account = account;
+        this.salaries = salaries;
     }
 
-    public Employee(int id, String email, String lastName, String firstName, String phoneNumber, String address, Department department, Position position, Employee manager) {
+    public Employee(int id, String imageUrl, String email, String lastName, String firstName, String phoneNumber, String address, Department department, Position position, Employee manager, Account account, List<Salary> salaries) {
         this.id = id;
+        this.imageUrl = imageUrl;
         this.email = email;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -62,6 +77,8 @@ public class Employee {
         this.department = department;
         this.position = position;
         this.manager = manager;
+        this.account = account;
+        this.salaries = salaries;
     }
 
     public int getId() {
@@ -70,6 +87,14 @@ public class Employee {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getEmail() {
@@ -134,5 +159,21 @@ public class Employee {
 
     public void setManager(Employee manager) {
         this.manager = manager;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public List<Salary> getSalaries() {
+        return salaries;
+    }
+
+    public void setSalaries(List<Salary> salaries) {
+        this.salaries = salaries;
     }
 }

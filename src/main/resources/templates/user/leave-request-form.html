@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/sidebar}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Xin Nghỉ Phép</title>
+    <!-- Link CSS của Bootstrap -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- CSS tùy chỉnh -->
+    <style>
+        body {
+          background-color: #f8f9fa;
+        }
+        .container {
+          max-width: 500px;
+          margin: 50px auto;
+          background-color: #fff;
+          border-radius: 10px;
+          box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+          padding: 30px;
+        }
+        .form-group label {
+          font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<article layout:fragment="content">
+    <div class="container">
+        <h2 class="text-center mb-4">Form Xin Nghỉ Phép</h2>
+        <form th:action="@{/users/create-leave-request}" method="post">
+            <input type="hidden" id="employeeId" name="employeeId" th:value="${employeeId}">
+            <div class="form-group">
+                <label for="leaveType">Loại Nghỉ</label>
+                <select class="form-control" id="leaveType" name="leaveType">
+                    <option value="Nghỉ phép có lương">Nghỉ phép có lương</option>
+                    <option value="Nghỉ phép không lương">Nghỉ phép không lương</option>
+                    <option value="Nghỉ phép bù">Nghỉ phép bù</option>
+                    <option value="Nghỉ phép khám thai">Nghỉ phép khám thai</option>
+                    <option value="Nghỉ phép bệnh">Nghỉ phép bệnh</option>
+                    <option>Khác</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="startDate">Ngày Bắt Đầu</label>
+                <input type="date" class="form-control" id="startDate" name="startDate">
+            </div>
+            <div class="form-group">
+                <label for="endDate">Ngày Kết Thúc</label>
+                <input type="date" class="form-control" id="endDate" name="endDate">
+            </div>
+            <div class="form-group">
+                <label for="reason">Lý Do</label>
+                <textarea class="form-control" id="reason" name="reason" rows="3"
+                          placeholder="Nhập lý do nghỉ"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Gửi</button>
+        </form>
+    </div>
+</article>
+
+</body>
+</html>

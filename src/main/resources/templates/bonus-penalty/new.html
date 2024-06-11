@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>New Bonus/Penalty</title>
+</head>
+<body>
+<h1>New Bonus/Penalty</h1>
+<form th:action="@{/salaries/bonus-penalty}" th:object="${bonusPenalty}" method="post">
+    <label for="employee">Employee:</label>
+    <select id="employee" th:field="*{employee.id}">
+        <option th:each="employee : ${employees}" th:value="${employee.id}"
+                th:text="${employee.firstName} + ' ' + ${employee.lastName}"></option>
+    </select><br/>
+
+    <label for="amount">Amount:</label>
+    <input type="text" id="amount" th:field="*{amount}"/><br/>
+
+    <label for="reason">Reason:</label>
+    <input type="text" id="reason" th:field="*{reason}"/><br/>
+
+    <label for="date">Date:</label>
+    <input type="date" id="date" th:field="*{date}"/><br/>
+
+    <button type="submit">Save</button>
+</form>
+</body>
+</html>

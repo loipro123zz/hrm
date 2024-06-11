@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/sidebar}">
 <head>
     <meta charset="UTF-8">
     <title>Quản Lý Nhân Viên</title>
@@ -106,7 +108,7 @@
 
 </head>
 <body>
-<div class="container">
+<article layout:fragment="content">
     <h3>Danh sách Vị Trí</h3>
     <hr>
     <!-- Hiển thị thông báo -->
@@ -174,11 +176,54 @@
             <td th:text="${position.name}"></td>
             <td th:text="${positionEmployeeCounts.get(position.id)}"></td>
             <td>
+
+
+                <!-- Button trigger employee list modal -->
+                <button type="button" class="btn p-0" data-bs-toggle="modal"
+                        th:data-bs-target="'#employeeListModal-' + ${position.id}">
+                    <i class="bi bi-eye"></i>
+                </button>
+
+                <!-- Employee List Modal -->
+                <div class="modal fade" th:id="'employeeListModal-' + ${position.id}" tabindex="-1"
+                     aria-labelledby="employeeListModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="employeeListModalLabel">Danh sách Nhân Viên <span
+                                        th:text="${position.name}"></span></h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table table-bordered table-striped">
+                                    <thead class="table-info">
+                                    <tr>
+                                        <td>Họ và Tên</td>
+                                        <td>Email</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="employee : ${positionEmployees.get(position.id)}">
+                                        <td th:text="${employee.lastName + ' ' + employee.firstName}"></td>
+                                        <td th:text="${employee.email}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
                 <!-- Begin Nút cập nhật -->
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                <button type="button" class="btn p-0" data-bs-toggle="modal"
                         th:data-bs-target="'#updateModal-' + ${position.id}">
-                    Cập nhật
+                    <i class="bi bi-pencil-square text-primary"></i>
                 </button>
                 <!-- Modal -->
                 <div class="modal fade" th:id="'updateModal-' + ${position.id}" tabindex="-1"
@@ -212,9 +257,9 @@
                 <!--                End Nút cập nhật-->
 
                 <!-- Button trigger delete confirmation modal -->
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                <button type="button" class="btn btn-danger p-1" data-bs-toggle="modal"
                         th:data-bs-target="'#deleteModal-' + ${position.id}">
-                    Xóa
+                    <i class="bi bi-trash"></i>
                 </button>
                 <!-- Delete Confirmation Modal -->
                 <div class="modal fade" th:id="'deleteModal-' + ${position.id}" tabindex="-1"
@@ -246,7 +291,7 @@
         </tbody>
 
     </table>
-</div>
+</article>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>

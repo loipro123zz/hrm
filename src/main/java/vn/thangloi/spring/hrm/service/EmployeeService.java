@@ -21,4 +21,7 @@ public interface EmployeeService {
 
     public List<Employee> getEmployeeByDepartmentId(int departmentId);
 
+    public List<Employee> getEmployeeByPositionId(int positionId);
+
+    public List<Employee> searchEmployeesByPosition(String keyword);
 }
